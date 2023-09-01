@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 )
 
@@ -10,9 +12,27 @@ import (
 var store = base64Captcha.DefaultMemStore
 
 func main() {
-	id, b64s := GetCaptcha()
-	fmt.Println(id, b64s)
-	fmt.Println(verify("xdyQzMAh40ezxkxBK2Ca", "11286"))
+	r := gin.Default()
+	r.Static("demo", "./static")
+
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
+	})
+
+	r.GET("getCode", func(c *gin.Context) {
+		id, b64s := GetCaptcha()
+		c.JSON(200, gin.H{
+			"id":   id,
+			"data": b64s,
+		})
+	})
+
+	r.GET("verifyCode", func(c *gin.Context) {
+		c.String(200, "%v", verify(c.Query("codeId"), c.Query("code")))
+	})
+	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
 // 获取验证马

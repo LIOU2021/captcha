@@ -7,15 +7,46 @@
 
 <body>
     <img id="image" src="" alt="图片">
+
+    <div>
+        <label for="">
+            verify
+            <input type="text" name="code" id="code">
+            <!-- <button onclick="myFunction()">Click me</button> -->
+            <input type="submit" id="verify" onclick="verify()">
+        </label>
+    </div>
+
+
 </body>
 <script>
+    let codeId = ""
     // 获取页面上的图像元素
     var imageElement = document.getElementById("image");
+    fetch('/getCode').then(function (response) {
+        return response.json();
+    })
+        .then(function (myJson) {
+            codeId = myJson.id
+            let data = myJson.data
+            let dataArr = data.split(",")
+            let dataType = dataArr[0]
+            let code = dataArr[1]
 
-    // 将Base64编码的图像数据设置为图像的源
-    var base64Data = "data:image/png;base64,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"; // 你的Base64数据
-    imageElement.src = "data:image/png;base64," + base64Data;
+            // 将Base64编码的图像数据设置为图像的源
+            imageElement.src = dataType + "," + code;
+        });
 
+    function verify() {
+        let inputCode = document.querySelector("#code").value
+        fetch(`/verifyCode?code=${inputCode}&codeId=${codeId}`).then(function (response) {
+            return response.text();
+        })
+            .then(function (myJson) {
+                alert(myJson)
+                document.location.reload() // 因为后端逻辑每次验证后都会删除code
+            });
+    }
 </script>
 
 </html>
