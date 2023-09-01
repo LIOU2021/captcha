@@ -1,6 +1,7 @@
 package main
 
 import (
+	"captcha/redisStore"
 	"fmt"
 	"net/http"
 
@@ -8,8 +9,13 @@ import (
 	"github.com/mojocn/base64Captcha"
 )
 
-// 这里可以换成redis
-var store = base64Captcha.DefaultMemStore
+var (
+	// 这里可以换成redis
+	// store = base64Captcha.DefaultMemStore
+
+	// 使用redis
+	store base64Captcha.Store = &redisStore.RedisStore{}
+)
 
 func main() {
 	r := gin.Default()
