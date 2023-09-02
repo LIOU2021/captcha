@@ -12,7 +12,6 @@
         <label for="">
             verify
             <input type="text" name="code" id="code">
-            <!-- <button onclick="myFunction()">Click me</button> -->
             <input type="submit" id="verify" onclick="verify()">
         </label>
     </div>
@@ -29,12 +28,9 @@
         .then(function (myJson) {
             codeId = myJson.id
             let data = myJson.data
-            let dataArr = data.split(",")
-            let dataType = dataArr[0]
-            let code = dataArr[1]
 
             // 将Base64编码的图像数据设置为图像的源
-            imageElement.src = dataType + "," + code;
+            imageElement.src = data;
         });
 
     function verify() {
